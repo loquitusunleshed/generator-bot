@@ -2,8 +2,10 @@
 
 from turtle import left, right
 import discord
+import requests
 from discord.ext import commands
 import random
+import os
 from gen_pass import *
 
 description = """An example bot to showcase the discord.ext.commands extension
@@ -61,6 +63,28 @@ async def repeat(ctx, times: int, content='repeating...'):
     for i in range(times):
         await ctx.send(content)
 
+@bot.command()
+async def memeanimales(ctx):
+    nombres = os.listdir('images')
+    ing=random.choice(nombres)
+    with open(f'images/{ing}', 'rb') as f:
+        # ¡Vamos a almacenar el archivo de la biblioteca Discord convertido en esta variable!
+        picture = discord.File(f)
+    # A continuación, podemos enviar este archivo como parámetro.
+    await ctx.send(file=picture)
+def get_duck_image_url():    
+    url = 'https://random-d.uk/api/random'
+    res = requests.get(url)
+    data = res.json()
+    return data['url']
+
+
+@bot.command('duck')
+async def duck(ctx):
+    '''Una vez que llamamos al comando duck, 
+    el programa llama a la función get_duck_image_url'''
+    image_url = get_duck_image_url()
+    await ctx.send(image_url)
 
 @bot.command()
 async def joined(ctx, member: discord.Member):
@@ -88,8 +112,7 @@ async def _bot(ctx):
     await ctx.send('Yes, the bot is cool.')
 
 
-bot.run("Add your bot")
-
+bot.run("aqui va tu bot")
 
 
 
